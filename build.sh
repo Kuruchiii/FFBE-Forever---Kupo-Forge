@@ -110,7 +110,7 @@ if os.environ.get('EXP') == 'true':
         put('build/kupo_payload_keep.bin', 'assets/kupo_payload_keep.bin')
     else:
         print('NOTE: no signing key at ' + ldir + '/private: Install Script payload NOT included')
-for f in extra + ['db.json', 'bestiary.json', 'gskills.json', 'lb_icon.png', 'dual_icon.png', 'summon_icon.png', 'geardata.json', 'awaken_mats.json', 'mascot_head.png', 'mascot_float.png', 'speed_patch.js', 'editor.pk8', 'editor.crt', 'gp/classes7.dex', 'gp/classes8.dex', 'gp/classes7.sha256', 'icons.bin']:
+for f in extra + ['db.json', 'bestiary.json', 'gskills.json', 'lb_icon.png', 'dual_icon.png', 'summon_icon.png', 'geardata.json', 'awaken_mats.json', 'mascot_head.png', 'mascot_float.png', 'speed_patch.js', 'gp/classes7.dex', 'gp/classes8.dex', 'gp/classes7.sha256', 'icons.bin']:
     put('assets/' + f, 'assets/' + f)
 z.close()
 z = zipfile.ZipFile('build/unsigned.apk')

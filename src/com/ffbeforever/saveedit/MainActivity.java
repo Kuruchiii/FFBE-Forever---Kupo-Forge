@@ -3453,7 +3453,7 @@ public class MainActivity extends Activity {
     }
 
     private V2Signer signer() throws Exception {
-        return new V2Signer(getAssets().open("editor.pk8"), getAssets().open("editor.crt"));
+        throw new Exception("Game re-signing was removed from this app (the signing key is no longer shipped inside it).");
     }
 
     private void log(final String s) {
