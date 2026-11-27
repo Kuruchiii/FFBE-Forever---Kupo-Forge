@@ -1,0 +1,18 @@
+# Never commit: signing keys, certificates, saves, logs, builds
+keys/
+*.pk8
+*.crt
+*.p12
+*.jks
+*.keystore
+*.pem
+private/
+*.apk
+*.aab
+build/
+cls/
+cls-sign/
+cls-test/
+AndroidManifest.bin
+logs/
+*.log

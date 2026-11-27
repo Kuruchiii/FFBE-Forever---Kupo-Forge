@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.ffbeforever.saveedit"
+    android:versionCode="152" android:versionName="0.17.14">
+    <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="36"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+    <application android:label="FFBE Kupo Forge" android:icon="@0x7f010000" android:theme="@0x0103022e">
+        <activity android:name="com.ffbeforever.saveedit.MainActivity" android:exported="true"
+            android:configChanges="4a0" android:windowSoftInputMode="10">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <service android:name="com.ffbeforever.saveedit.SpeedService" android:exported="false"
+            android:foregroundServiceType="40000000">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Floating game speed button drawn over the game"/>
+        </service>
+        <receiver android:name="com.ffbeforever.saveedit.InstallReceiver" android:exported="false"/>
+        <receiver android:name="com.ffbeforever.saveedit.BootReceiver" android:exported="true">
+            <intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"/></intent-filter>
+        </receiver>
+    </application>
+</manifest>

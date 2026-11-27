@@ -1,0 +1,32 @@
+How to let your own tool load script into FFBE Forever (signed loader)
+
+The game has an optional loader that only runs script signed by an allowed tool. You never share a secret. You send the game developer only your PUBLIC key.
+
+1. Make your key pair (once, keep the private file secret, back it up):
+   openssl genrsa -out my_private.pem 2048
+   openssl rsa -in my_private.pem -pubout -outform DER | base64 -w0 > my_public.b64
+   Use RSA 2048 exactly (other sizes are refused). Never share my_private.pem or put it in your app.
+
+2. Send the game developer your tool name and the text in my_public.b64. They add one line:
+   ['Your Tool Name', 'text from my_public.b64'],
+   to the ALLOWED list in the loader block. To remove your tool they delete that line.
+
+3. Sign each script you ship, OFFLINE when you build (never on the phone, never sign scripts a user imports).
+   The script must start with this exact first line (the signature covers it):
+     //KUPO tool=Your Tool Name game=* exp=<unix seconds when it expires>
+   tool = the same name the game developer put in the list. game = the game version text or *. The game always checks the tool name and the expiry. It checks the game version only if the game developer has set GAME_VERSION in the loader. exp = expiry; we use 1 year (sign_payload.sh does this by default).
+   openssl dgst -sha256 -sign my_private.pem -out sig.bin script_with_header.js
+   The signature must be exactly 256 bytes (RSA 2048).
+   Payload = 4 bytes (big-endian) holding 256, then sig.bin, then the script text (UTF-8).
+   Example in Python:
+     import struct; sig=open('sig.bin','rb').read(); body=open('script_with_header.js','rb').read()
+     assert len(sig)==256; payload = struct.pack('>I', 256) + sig + body
+   Limits: script at most 1 MB. Expiry at most 120 days ahead (longer is refused). The game closes a connection after 3 seconds, and allows 2 connections at once.
+
+4. Send the payload to the game from the same phone: open a TCP connection to 127.0.0.1 port 27334,
+   write the payload, then close your side (shutdown write). The game answers one line:
+   "ok loaded N", "refused <reason>" (bad signature, header, expiry, size, time) or "script error <message>" (your script threw). Any change to the script after signing makes it refused.
+
+5. Rules: the signature covers the script text exactly. Scripts run inside the game process with full Frida access, so sign only code you trust. If your private key leaks, ask the developer to delete your line and make a new pair.
+
+The game logs every script it runs to logcat (tag KUPO_LOADER): your tool name and the script's SHA-256.
